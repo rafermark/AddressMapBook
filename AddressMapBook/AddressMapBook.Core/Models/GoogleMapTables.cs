@@ -9,6 +9,7 @@ namespace AddressMapBook.Core.Models
     public class GoogleMapTables : BindableBase
     {
         private string _placeId;
+        [PrimaryKey]
         public string PlaceId
         {
             get { return _placeId; }

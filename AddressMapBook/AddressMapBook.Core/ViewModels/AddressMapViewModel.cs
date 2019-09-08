@@ -84,24 +84,13 @@ namespace AddressMapBook.Core.ViewModels
                 await ExecuteAskPermission();
             });
 
+            RemoveAddressCommand = new MvxCommand<GoogleMapTables>(ExecuteRemoveAddress);
 
             LocationGranted = await _permissionDependency.LocationPermission();
 
-            try
-            {
-                var _dbList = await _googleMapTableAccess.GetMapTables();
-                AddedAddresses = new MvxObservableCollection<GoogleMapTables>(_dbList);
-                if(AddedAddresses.Count > 0)
-                {
-                    ExecuteSelect(AddedAddresses.First());
-                }
-            }
-            catch (Exception ex)
-            {
-                _quickMessageDependency.ShowToastMessage(ex.Message);
-            }
-
             await SetMap();
+
+            await RefreshList();
         }
 
         ~AddressMapViewModel()
@@ -258,6 +247,31 @@ namespace AddressMapBook.Core.ViewModels
             if (LocationGranted)
             {
                 await SetMap();
+            }
+        }
+
+
+        private async void ExecuteRemoveAddress(GoogleMapTables place)
+        {
+            await _googleMapTableAccess.Delete(place);
+            await RefreshList();
+        }
+
+        private async Task RefreshList()
+        {
+
+            try
+            {
+                var _dbList = await _googleMapTableAccess.GetMapTables();
+                AddedAddresses = new MvxObservableCollection<GoogleMapTables>(_dbList);
+                if (AddedAddresses.Count > 0)
+                {
+                    ExecuteSelect(AddedAddresses.First());
+                }
+            }
+            catch (Exception ex)
+            {
+                _quickMessageDependency.ShowToastMessage(ex.Message);
             }
         }
 
