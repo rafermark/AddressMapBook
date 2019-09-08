@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvx:MvxContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AddressMapBook.Core.Pages.SearchAddressPage"
+             xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+            x:Name="parent">
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" Margin="5">
+            <SearchBar Text="{Binding SearchAddress}" SearchCommand="{Binding SearchCommand}"/>
+            <ListView ItemsSource="{Binding PlacesResult}"
+                      HasUnevenRows="true">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="15"
+                                      RowSpacing="2"
+                                      ColumnSpacing="15">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=ViewModel.SelectCommand, Source={x:Reference Name=parent}}" CommandParameter="{Binding .}" NumberOfTapsRequired="1"/>
+                                </Grid.GestureRecognizers>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Label LineBreakMode="MiddleTruncation"
+                                               Text="{Binding StructuredFormatting.MainText}"
+                                               Grid.Row="0">
+                                </Label>
+
+                                <Label LineBreakMode="MiddleTruncation"
+                                                 Text="{Binding StructuredFormatting.SecondaryText}" 
+                                                 TextColor="Gray" 
+                                                 Grid.Row="1">
+                                </Label>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</mvx:MvxContentPage>

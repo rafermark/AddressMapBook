@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvx:MvxContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AddressMapBook.Core.Pages.AddressMapPage"
+             xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             xmlns:cnv="clr-namespace:AddressMapBook.Core.Converters"
+             x:Name="parent"
+             Title="{Binding Title}">
+    <mvx:MvxContentPage.Resources>
+        <cnv:ReverseBool x:Key="revBool"/>
+    </mvx:MvxContentPage.Resources>
+    <mvx:MvxContentPage.ToolbarItems>
+        <ToolbarItem Name="Menu1" Text="Add" ClassId="Add" Order="Primary" Command="{Binding AddNewAddressCommand}" />
+    </mvx:MvxContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Margin="5">
+            <!--<maps:Map x:Name="MyMap"
+                  WidthRequest="320"
+                  HeightRequest="200"                  
+                  IsShowingUser="true"
+                  MapType="Hybrid"
+                      
+                  />-->
+            <ContentView Content="{Binding Map}"
+                         IsVisible="{Binding LocationGranted}" HeightRequest="400"/>
+            <Button VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="200" HeightRequest="50" Text="Allow Location" 
+                    IsVisible="{Binding LocationGranted, Converter={StaticResource revBool}}"
+                    Command="{Binding AskPermissionCommand}"/>
+            <ListView ItemsSource="{Binding AddedAddresses}"
+                      HasUnevenRows="true">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="15"
+                                      RowSpacing="2"
+                                      ColumnSpacing="15">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=ViewModel.SelectCommand, Source={x:Reference Name=parent}}" CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Label LineBreakMode="MiddleTruncation"
+                                               Text="{Binding MainText}"
+                                               Grid.Row="0"/>
+
+                                <Label LineBreakMode="MiddleTruncation"
+                                                 Text="{Binding SecondaryText}" 
+                                                 TextColor="Gray" 
+                                                 Grid.Row="1"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</mvx:MvxContentPage>
